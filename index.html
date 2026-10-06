@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Greek 100</title>
+  
+  <!-- PWA Settings & Inline Emoji Icon -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇷</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇷</text></svg>">
+  <meta name="theme-color" content="#0d5eaf">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Greek 100">
+  
+  <style>
+    :root {
+      --primary: #0d5eaf;
+      --primary-dark: #083c70;
+      --accent: #2196F3;
+      --bg: #f4f7f6;
+      --card-bg: #ffffff;
+      --text: #2c3e50;
+      --text-muted: #7f8c8d;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --border-radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 480px;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 8px;
+    }
+
+    .profile-selection {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .profile-btn {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .profile-btn:active {
+      transform: scale(0.98);
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+    }
+
+    .btn:active {
+      opacity: 0.9;
+      transform: scale(0.99);
+    }
+
+    .btn-secondary {
+      background: #edf2f7;
+      color: var(--text);
+    }
+
+    .card-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      min-height: 250px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      padding: 24px;
+      position: relative;
+    }
+
+    .card-main {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    .card-sub {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .card-latin {
+      font-size: 1rem;
+      font-style: italic;
+      color: #64748b;
+      margin-top: 8px;
+    }
+
+    .speaker-btn {
+      background: #e0f2fe;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--primary);
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .btn-know {
+      background: var(--success);
+      color: white;
+      padding: 18px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+    }
+
+    .btn-dontknow {
+      background: var(--danger);
+      color: white;
+      padding: 18px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .stats-container {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .direction-select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- HEADER -->
+  <header>
+    <div class="app-title">Greek 100 🇬🇷</div>
+    <button id="home-btn" class="btn-icon hidden" onclick="showScreen('mode-screen')">🏠</button>
+  </header>
+
+  <!-- SCREEN 1: PROFILE SELECTION -->
+  <div id="profile-screen">
+    <h2 style="text-align: center; margin-bottom: 24px;">Wer lernt heute?</h2>
+    <div class="profile-selection">
+      <button class="profile-btn" onclick="selectProfile('Regula')">Regula</button>
+      <button class="profile-btn" onclick="selectProfile('Laurent')">Laurent</button>
+      <button class="profile-btn" onclick="selectProfile('Claire')">Claire</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: MODE SELECTION -->
+  <div id="mode-screen" class="hidden">
+    <h2 id="welcome-user" style="text-align: center; margin-bottom: 16px;"></h2>
+    
+    <label style="font-weight: 600; display: block; margin-bottom: 6px;">Lernrichtung:</label>
+    <select id="direction-select" class="direction-select">
+      <option value="mixed">1. Gemischte Richtungen</option>
+      <option value="el-de">2. Griechisch → Deutsch</option>
+      <option value="de-el">3. Deutsch → Griechisch</option>
+    </select>
+
+    <div class="mode-grid">
+      <button class="btn" onclick="startLearning('flashcard')">📖 Lesen / Karteikarten</button>
+      <button class="btn" onclick="startLearning('listening')">🎧 Hörverständnis</button>
+      <button class="btn" onclick="startLearning('mixed')">🔀 Gemischte Herausforderung</button>
+      <button class="btn" onclick="startLearning('weak')">🎯 Schwache Wörter</button>
+      <button class="btn btn-secondary" onclick="showStats()">📊 Lernfortschritt anzeigen</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: LEARNING INTERACTION -->
+  <div id="learning-screen" class="hidden">
+    <div class="progress-bar-bg">
+      <div id="progress-bar" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="card-container">
+      <div id="card-prompt" class="card-main">---</div>
+      <button id="audio-btn" class="speaker-btn hidden" onclick="playAudio()">🔊</button>
+      
+      <div id="reveal-area" class="hidden" style="margin-top: 20px; width: 100%;">
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin-bottom: 16px;">
+        <div id="card-answer" class="card-sub">---</div>
+        <div id="card-latin" class="card-latin"></div>
+      </div>
+
+      <button id="reveal-btn" class="btn" style="margin-top: 20px;" onclick="revealAnswer()">Antwort aufdecken</button>
+    </div>
+
+    <div id="grading-buttons" class="action-buttons hidden">
+      <button class="btn-dontknow" onclick="answerCard(false)">✕ Nicht gewusst</button>
+      <button class="btn-know" onclick="answerCard(true)">✓ Gewusst</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: STATS -->
+  <div id="stats-screen" class="hidden">
+    <h2 style="margin-bottom: 16px; text-align: center;">Lernfortschritt</h2>
+    <div id="stats-content" class="stats-container"></div>
+    <button class="btn btn-secondary" style="margin-top: 20px;" onclick="showScreen('mode-screen')">Zurück</button>
+  </div>
+</div>
+
+<script>
+const VOCABULARY = [
+  { id: 1, el: "Γειά σου", latin: "Yassou", de: "Hallo / Tschüss" },
+  { id: 2, el: "Ευχαριστώ", latin: "Efcharisto", de: "Danke" },
+  { id: 3, el: "Παρακαλώ", latin: "Parakalo", de: "Bitte / Gern geschehen" },
+  { id: 4, el: "Ναι", latin: "Ne", de: "Ja" },
+  { id: 5, el: "Όχι", latin: "Ochi", de: "Nein" },
+  { id: 6, el: "Με συγχωρείτε", latin: "Me synchoreite", de: "Entschuldigung" },
+  { id: 7, el: "Καλημέρα", latin: "Kalimera", de: "Guten Morgen / Guten Tag" },
+  { id: 8, el: "Καλησπέρα", latin: "Kalispera", de: "Guten Abend" },
+  { id: 9, el: "Καληνύχτα", latin: "Kalinychta", de: "Gute Nacht" },
+  { id: 10, el: "Αντίο", latin: "Adio", de: "Auf Wiedersehen" },
+  { id: 11, el: "Τι κάνεις;", latin: "Ti kanis?", de: "Wie geht es dir?" },
+  { id: 12, el: "Καλά, ευχαριστώ", latin: "Kala, efcharisto", de: "Gut, danke" },
+  { id: 13, el: "Όλα καλά", latin: "Ola kala", de: "Alles gut" },
+  { id: 14, el: "Πώς σε λένε;", latin: "Pos se lene?", de: "Wie heißt du?" },
+  { id: 15, el: "Με λένε...", latin: "Me lene...", de: "Ich heiße..." },
+  { id: 16, el: "Χάρηκα", latin: "Charika", de: "Schön, dich kennenzulernen" },
+  { id: 17, el: "Δεν καταλαβαίνω", latin: "Den katalavaino", de: "Ich verstehe nicht" },
+  { id: 18, el: "Μιλάτε αγγλικά;", latin: "Milate agglika?", de: "Sprechen Sie Englisch?" },
+  { id: 19, el: "Βοήθεια!", latin: "Voithia!", de: "Hilfe!" },
+  { id: 20, el: "Εντάξει", latin: "Entaxei", de: "In Ordnung / Okay" },
+  { id: 21, el: "Το νερό", latin: "To nero", de: "Das Wasser" },
+  { id: 22, el: "Ο καφές", latin: "O kafes", de: "Der Kaffee" },
+  { id: 23, el: "Το ψωμί", latin: "To psomi", de: "Das Brot" },
+  { id: 24, el: "Το φαγητό", latin: "To fagito", de: "Das Essen" },
+  { id: 25, el: "Ο λογαριασμός", latin: "O logariasmos", de: "Die Rechnung" },
+  { id: 26, el: "Το κρασί", latin: "To krasi", de: "Der Wein" },
+  { id: 27, el: "Η μπίρα", latin: "I bira", de: "Das Bier" },
+  { id: 28, el: "Στην υγεία μας!", latin: "Stin ygeia mas!", de: "Prost! / Auf unsere Gesundheit!" },
+  { id: 29, el: "Νόστιμο", latin: "Nostimo", de: "Lecker" },
+  { id: 30, el: "Το τραπέζι", latin: "To trapezi", de: "Der Tisch" },
+  { id: 31, el: "Ένα", latin: "Ena", de: "Eins" },
+  { id: 32, el: "Δύο", latin: "Dyo", de: "Zwei" },
+  { id: 33, el: "Τρία", latin: "Tria", de: "Drei" },
+  { id: 34, el: "Τέσσερα", latin: "Tessera", de: "Vier" },
+  { id: 35, el: "Πέντε", latin: "Pende", de: "Fünf" },
+  { id: 36, el: "Έξι", latin: "Exi", de: "Sechs" },
+  { id: 37, el: "Επτά", latin: "Epta", de: "Sieben" },
+  { id: 38, el: "Οκτώ", latin: "Okto", de: "Acht" },
+  { id: 39, el: "Εννέα", latin: "Ennea", de: "Neun" },
+  { id: 40, el: "Δέκα", latin: "Deka", de: "Zehn" },
+  { id: 41, el: "Πού;", latin: "Pou?", de: "Wo?" },
+  { id: 42, el: "Πότε;", latin: "Pote?", de: "Wann?" },
+  { id: 43, el: "Τι;", latin: "Ti?", de: "Was?" },
+  { id: 44, el: "Ποιος;", latin: "Pios?", de: "Wer?" },
+  { id: 45, el: "Γιατί;", latin: "Giati?", de: "Warum?" },
+  { id: 46, el: "Πόσο κοστίζει;", latin: "Poso kostizi?", de: "Wie viel kostet es?" },
+  { id: 47, el: "Σήμερα", latin: "Simera", de: "Heute" },
+  { id: 48, el: "Aύριο", latin: "Avrio", de: "Morgen" },
+  { id: 49, el: "Χθες", latin: "Chthes", de: "Gestern" },
+  { id: 50, el: "Τώρα", latin: "Tora", de: "Jetzt" },
+  { id: 51, el: "Η θάλασσα", latin: "I thalassa", de: "Das Meer" },
+  { id: 52, el: "Η παραλία", latin: "I paralia", de: "Der Strand" },
+  { id: 53, el: "Ο ήλιος", latin: "O ilios", de: "Die Sonne" },
+  { id: 54, el: "Το ξενοδοχείο", latin: "To xenodocheio", de: "Das Hotel" },
+  { id: 55, el: "Το δωμάτιο", latin: "To domatio", de: "Das Zimmer" },
+  { id: 56, el: "Το λεωφορείο", latin: "To leoforeio", de: "Der Bus" },
+  { id: 57, el: "Το ταξί", latin: "To taxi", de: "Das Taxi" },
+  { id: 58, el: "Το αεροδρόμιο", latin: "To aerodromio", de: "Der Flughafen" },
+  { id: 59, el: "Το λιμάνι", latin: "To limani", de: "Der Hafen" },
+  { id: 60, el: "Το εισιτήριο", latin: "To eisitirio", de: "Die Fahrkarte / Das Ticket" },
+  { id: 61, el: "Αριστερά", latin: "Aristera", de: "Links" },
+  { id: 62, el: "Δεξιά", latin: "Dexia", de: "Rechts" },
+  { id: 63, el: "Ευθεία", latin: "Eftheia", de: "Geradeaus" },
+  { id: 64, el: "Εδώ", latin: "Edo", de: "Hier" },
+  { id: 65, el: "Εκεί", latin: "Ekei", de: "Dort" },
+  { id: 66, el: "Kοντά", latin: "Konda", de: "Nahe" },
+  { id: 67, el: "Μακριά", latin: "Makria", de: "Weit weg" },
+  { id: 68, el: "Η οικογένεια", latin: "I oikogeneia", de: "Die Familie" },
+  { id: 69, el: "Ο πατέρας", latin: "O pateras", de: "Der Vater" },
+  { id: 70, el: "Η μητέρα", latin: "I mitera", de: "Die Mutter" },
+  { id: 71, el: "Ο γιος", latin: "O gios", de: "Der Sohn" },
+  { id: 72, el: "Η κόρη", latin: "I kori", de: "Die Tochter" },
+  { id: 73, el: "Ο φίλος", latin: "O filos", de: "Der Freund" },
+  { id: 74, el: "Η φίλη", latin: "I fili", de: "Die Freundin" },
+  { id: 75, el: "Τα παιδιά", latin: "Ta meidya", de: "Die Kinder" },
+  { id: 76, el: "Θέλω", latin: "Thelo", de: "Ich will / Ich möchte" },
+  { id: 77, el: "Έχω", latin: "Echo", de: "Ich habe" },
+  { id: 78, el: "Είμαι", latin: "Eimai", de: "Ich bin" },
+  { id: 79, el: "Πηγαίνω", latin: "Pigaino", de: "Ich gehe" },
+  { id: 80, el: "Βλέπω", latin: "Vlepo", de: "Ich sehe" },
+  { id: 81, el: "Mου αρέσει", latin: "Mou aresei", de: "Es gefällt mir / Ich mag" },
+  { id: 82, el: "Ξέρω", latin: "Xero", de: "Ich weiß" },
+  { id: 83, el: "Δεν πειράζει", latin: "Den peirazi", de: "Macht nichts / Kein Problem" },
+  { id: 84, el: "Σιγά σιγά", latin: "Siga siga", de: "Langsam langsam / Immer mit der Ruhe" },
+  { id: 85, el: "Καλή επιτυχία!", latin: "Kali epitychia!", de: "Viel Erfolg!" },
+  { id: 86, el: "Καλώς ήρθατε", latin: "Kalos irthate", de: "Willkommen" },
+  { id: 87, el: "Το τηλέφωνο", latin: "To tilefono", de: "Das Telefon" },
+  { id: 88, el: "Kλειδί", latin: "Kleidi", de: "Der Schlüssel" },
+  { id: 89, el: "Η τσάντα", latin: "I tsanda", de: "Die Tasche" },
+  { id: 90, el: "Τα χρήματα", latin: "Ta chrimata", de: "Das Geld" },
+  { id: 91, el: "Το μαγαζί", latin: "To magazi", de: "Das Geschäft / Der Laden" },
+  { id: 92, el: "Η αστυνομία", latin: "I astynomia", de: "Die Polizei" },
+  { id: 93, el: "Το φαρμακείο", latin: "To farmakeio", de: "Die Apotheke" },
+  { id: 94, el: "Kαλή όρεξη", latin: "Kali orexi", de: "Guten Appetit" },
+  { id: 95, el: "Συγγνώμη", latin: "Syggnomi", de: "Entschuldigung" },
+  { id: 96, el: "Πού είναι το μπάνιο;", latin: "Pou einai to banyo?", de: "Wo ist die Toilette?" },
+  { id: 97, el: "Μια στιγμή", latin: "Mia stigmi", de: "Einen Moment" },
+  { id: 98, el: "Πολύ καλά", latin: "Poly kala", de: "Sehr gut" },
+  { id: 99, el: "Kαλό ταξίδι", latin: "Kalo taxidi", de: "Gute Reise" },
+  { id: 100, el: "Χρόνια πολλά!", latin: "Chronia polla!", de: "Alles Gute zum Geburtstag / Zum Fest!" }
+];
+
+let activeUser = null;
+let currentMode = 'flashcard';
+let currentItem = null;
+let currentDir = 'el-de';
+let isAnswerRevealed = false;
+let sessionTotal = 0;
+
+const synth = window.speechSynthesis;
+
+function init() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+function showScreen(screenId) {
+  ['profile-screen', 'mode-screen', 'learning-screen', 'stats-screen'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById(screenId).classList.remove('hidden');
+  document.getElementById('home-btn').classList.toggle('hidden', screenId === 'profile-screen');
+}
+
+function selectProfile(name) {
+  activeUser = name;
+  document.getElementById('welcome-user').innerText = `Hallo, ${name}!`;
+  showScreen('mode-screen');
+}
+
+function getUserData() {
+  const data = localStorage.getItem(`greek100_${activeUser}`);
+  return data ? JSON.parse(data) : {};
+}
+
+function saveUserData(data) {
+  localStorage.setItem(`greek100_${activeUser}`, JSON.stringify(data));
+}
+
+function startLearning(mode) {
+  currentMode = mode;
+  sessionTotal = 0;
+  showScreen('learning-screen');
+  nextCard();
+}
+
+function selectNextItem() {
+  const userData = getUserData();
+  const selectedDirectionSetting = document.getElementById('direction-select').value;
+  let pool = [...VOCABULARY];
+
+  if (currentMode === 'weak') {
+    const weakItems = pool.filter(item => {
+      const elDeScore = (userData[`${item.id}_el-de`] || 0);
+      const deElScore = (userData[`${item.id}_de-el`] || 0);
+      return elDeScore < 3 || deElScore < 3;
+    });
+    if (weakItems.length > 0) pool = weakItems;
+  }
+
+  const chosenItem = pool[Math.floor(Math.random() * pool.length)];
+  let direction = selectedDirectionSetting;
+  if (selectedDirectionSetting === 'mixed') {
+    direction = Math.random() > 0.5 ? 'el-de' : 'de-el';
+  }
+
+  return { item: chosenItem, dir: direction };
+}
+
+function nextCard() {
+  isAnswerRevealed = false;
+  const next = selectNextItem();
+  currentItem = next.item;
+  currentDir = next.dir;
+
+  const promptEl = document.getElementById('card-prompt');
+  const answerEl = document.getElementById('card-answer');
+  const latinEl = document.getElementById('card-latin');
+  const audioBtn = document.getElementById('audio-btn');
+
+  document.getElementById('reveal-area').classList.add('hidden');
+  document.getElementById('grading-buttons').classList.add('hidden');
+  document.getElementById('reveal-btn').classList.remove('hidden');
+
+  if (currentMode === 'listening') {
+    promptEl.innerText = "🎧 Hör gut zu...";
+    audioBtn.classList.remove('hidden');
+    playAudio();
+  } else {
+    audioBtn.classList.add('hidden');
+    if (currentDir === 'el-de') {
+      promptEl.innerText = currentItem.el;
+      audioBtn.classList.remove('hidden');
+    } else {
+      promptEl.innerText = currentItem.de;
+    }
+  }
+
+  answerEl.innerText = currentDir === 'el-de' ? currentItem.de : currentItem.el;
+  latinEl.innerText = currentItem.latin;
+
+  updateProgressBar();
+}
+
+function playAudio() {
+  if (!synth) return;
+  synth.cancel();
+
+  const isGreekSpeech = (currentMode === 'listening') ? true : (currentDir === 'el-de');
+  const textToSpeak = isGreekSpeech ? currentItem.el : currentItem.de;
+  const lang = isGreekSpeech ? 'el-GR' : 'de-DE';
+
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = lang;
+
+  const voices = synth.getVoices();
+  const voice = voices.find(v => v.lang.includes(isGreekSpeech ? 'el' : 'de'));
+  if (voice) utterance.voice = voice;
+
+  synth.speak(utterance);
+}
+
+function revealAnswer() {
+  isAnswerRevealed = true;
+  document.getElementById('reveal-area').classList.remove('hidden');
+  document.getElementById('reveal-btn').classList.add('hidden');
+  document.getElementById('grading-buttons').classList.remove('hidden');
+
+  if (currentMode === 'listening') {
+    document.getElementById('card-prompt').innerText = currentItem.el;
+  }
+  
+  playAudio();
+}
+
+function answerCard(knew) {
+  const userData = getUserData();
+  const key = `${currentItem.id}_${currentDir}`;
+  let currentScore = userData[key] || 0;
+
+  if (knew) {
+    currentScore = Math.min(currentScore + 1, 3);
+  } else {
+    currentScore = Math.max(currentScore - 1, 0);
+  }
+
+  userData[key] = currentScore;
+  saveUserData(userData);
+
+  sessionTotal++;
+  nextCard();
+}
+
+function updateProgressBar() {
+  const pct = Math.min((sessionTotal / 10) * 100, 100);
+  document.getElementById('progress-bar').style.width = `${pct}%`;
+}
+
+function showStats() {
+  const userData = getUserData();
+  let masteredBoth = 0;
+  let totalCardsCompleted = 0;
+  let weakCount = 0;
+
+  VOCABULARY.forEach(item => {
+    const elDe = userData[`${item.id}_el-de`] || 0;
+    const deEl = userData[`${item.id}_de-el`] || 0;
+
+    if (elDe > 0) totalCardsCompleted++;
+    if (deEl > 0) totalCardsCompleted++;
+
+    if (elDe >= 3 && deEl >= 3) {
+      masteredBoth++;
+    } else if (elDe < 2 || deEl < 2) {
+      weakCount++;
+    }
+  });
+
+  const pctMastered = Math.round((masteredBoth / VOCABULARY.length) * 100);
+
+  const content = `
+    <div class="stats-row"><span>Gelernt für:</span> <strong>${activeUser}</strong></div>
+    <div class="stats-row"><span>Vollständig gemeistert:</span> <strong>${masteredBoth} / ${VOCABULARY.length} (${pctMastered}%)</strong></div>
+    <div class="stats-row"><span>Schwache Wörter:</span> <strong>${weakCount}</strong></div>
+  `;
+
+  document.getElementById('stats-content').innerHTML = content;
+  showScreen('stats-screen');
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

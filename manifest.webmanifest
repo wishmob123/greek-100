@@ -1,0 +1,9 @@
+{
+  "name": "Greek 100",
+  "short_name": "Greek 100",
+  "description": "Lerne Modernes Griechisch für die ganze Familie",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d5eaf"
+}
